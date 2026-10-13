@@ -21,6 +21,7 @@ let
         installPhase = ''
             mkdir -p $out/bin
             cp $bin_file $out/bin/opencode
+            chmod +x $out/bin/opencode
             
         '';
     };
@@ -40,8 +41,8 @@ let
         '';
     };
 
-    v0_154_0_shell_x86_64_linux_all_libc_powershell = pkgs.mkShell {
-        name = "zm_pixi-shell-v0_154_0-powershell";
+    v2_0_26_shell_x86_64_linux_gnu_libc_powershell = pkgs.mkShell {
+        name = "zm_pixi-shell-v2_0_26-powershell";
         buildInputs = [
             pkgs.bashInteractive
         ];
@@ -71,7 +72,7 @@ let
                 linux = {
                     gnu_libc = {
                         gnu_bash = v2_0_26_shell_x86_64_linux_gnu_libc_gnu_bash;
-                        powershell = v0_154_0_shell_x86_64_linux_all_libc_powershell;
+                        powershell = v2_0_26_shell_x86_64_linux_gnu_libc_powershell;
                     };
                 };
             };
