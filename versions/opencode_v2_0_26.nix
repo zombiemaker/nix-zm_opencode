@@ -8,8 +8,8 @@ let
         version = "2.0.26";
         
         bin_file = pkgs.fetchurl {
-            url = "https://github.com/zombiemaker/nix-zm_opencode/releases/download/nix-opencode-v2.0.26/opencode-x86_64-linux-gnu_libc";
-            sha256 = "";
+            url = "https://github.com/zombiemaker/nix-zm_opencode/releases/download/v0.1.0/opencode-v2.0.26-x86_64-linux-gnu_libc";
+            sha256 = "sha256-2RI7m82wox96uf6YErWKncF2itbZfnsnbf8RgYEyGMk=";
         };
 
         nativeBuildInputs = [];
