@@ -4,7 +4,7 @@
 
 let
     v2_0_26_machine_code_x86_64_linux_gnu_libc = pkgs.stdenv.mkDerivation {
-        name = "zm_codex-machine_code.x86_64.linux.gnu_libc";
+        name = "zm_opencode-machine_code.x86_64.linux.gnu_libc";
         version = "2.0.26";
         
         bin_file = pkgs.fetchurl {
