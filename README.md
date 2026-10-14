@@ -91,3 +91,6 @@ flake.nix file
 ```bash
 nix develop .#latest.shells.x86_64.linux.gnu_libc
 ```
+
+## Licenses
+The license for this code repository is [[LICENSE.md]].  Please review the licenses for the binary files (i.e. OpenCode) that this Nix Flake patches for NixOS and packages. 
