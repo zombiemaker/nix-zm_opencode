@@ -12,17 +12,61 @@ let
             sha256 = "sha256-2RI7m82wox96uf6YErWKncF2itbZfnsnbf8RgYEyGMk=";
         };
 
-        nativeBuildInputs = [];
+        nativeBuildInputs = [
+            # pkgs.autoPatchelfHook # Use this to automatically patch ELF headers
+        ];
+
+        buildInputs = [
+            pkgs.coreutils
+            pkgs.patchelf
+            pkgs.glibc
+            pkgs.zlib
+            pkgs.stdenv.cc.cc.lib # Useful if your binary needs libstdc++.so
+        ];
 
         phases = [
             "installPhase"
+            "postFixup"
         ];
 
         installPhase = ''
+            TARGET_BIN="$out/bin/opencode"
+
             mkdir -p $out/bin
-            cp $bin_file $out/bin/opencode
-            chmod +x $out/bin/opencode
-            
+            cp $bin_file $TARGET_BIN
+            chmod +x $TARGET_BIN
+        '';
+        
+        postFixup = ''
+            # Add write permission to patch ELF file
+            chmod +w $TARGET_BIN
+
+            # Read the Nix store paths into the array
+            mapfile -t TARGET_BIN_NIX_PATHS < <(ldd "$TARGET_BIN" 2>/dev/null | \
+                grep -o '/nix/store/[^/]*' | \
+                sort -u)
+
+            # Append "/lib" to each path to make them valid RPATH directories
+            TARGET_BIN_NIX_LIB_PATHS=( "''${TARGET_BIN_NIX_PATHS[@]/%//lib}" )
+
+            # Join the array items with colons inside a local subshell block
+            TARGET_BIN_NIX_LIB_PATHS_STRING=$(IFS=:; echo "''${TARGET_BIN_NIX_LIB_PATHS[*]}")
+
+            # This grabs every '-L/nix/store/...' flag and turns it into a colon-separated list
+            NIX_LDFLAGS_NIX_LIB_PATHS_STRING=$(echo ''${NIX_LDFLAGS} | tr ' ' '\n' | grep '^-L' | sed 's/-L//' | tr '\n' ':' | sed 's/:$//')
+
+
+            # Patching ELF headers to run natively on Nix
+            patchelf \
+                --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
+                --set-rpath "''${TARGET_BIN_NIX_LIB_PATHS_STRING}:''${NIX_LDFLAGS_NIX_LIB_PATHS_STRING}" \
+                "''${TARGET_BIN}"
+
+            # De-dup path entries
+            patchelf --shrink-rpath "''${TARGET_BIN}"
+
+            # Remove write permission
+            chmod -w $TARGET_BIN
         '';
     };
 
