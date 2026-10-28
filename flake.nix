@@ -15,13 +15,13 @@
         pkgs = nixpkgs.legacyPackages.${nixpkgs_runtime_system};
 
         opencode_v2_0_26 = pkgs.callPackage ./versions/opencode_v2_0_26.nix;
-        opencode_v2_20_0 = pkgs.callPackage ./versions/opencode_v2_20_0.nix;
+        opencode_v2_2_0 = pkgs.callPackage ./versions/opencode_v2_2_0.nix;
 
     in {
         v2_0_26 = opencode_v2_0_26 {pkgs = pkgs;};
-        v2_20_0 = opencode_v2_20_0 {pkgs = pkgs;};
+        v2_2_0 = opencode_v2_2_0 {pkgs = pkgs;};
 
-        latest = self.outputs.v2_20_0;
+        latest = self.outputs.v2_2_0;
     };
 }
 

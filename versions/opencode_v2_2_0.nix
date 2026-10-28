@@ -4,9 +4,9 @@
 
 let
     # NixOS Linux ELF
-    v2_20_0_machine_code_x86_64_linux_nixos_gnu_libc = pkgs.stdenv.mkDerivation {
+    v2_2_0_machine_code_x86_64_linux_nixos_gnu_libc = pkgs.stdenv.mkDerivation {
         name = "zm_opencode-machine_code.x86_64.linux_nixos.gnu_libc";
-        version = "2.20.0";
+        version = "2.2.0";
         
         archive_file = pkgs.fetchurl {
             url = "https://github.com/anomalyco/opencode/releases/download/v2.2.0/opencode-linux-x64.tar.gz";
@@ -34,8 +34,9 @@ let
             TARGET_DIR="$out/bin"
             TARGET_BIN="$out/bin/opencode"
 
-            mkdir -p $out/bin
-            tar xvf --directory $TARGET_DIR $archive_file
+            mkdir -p $TARGET_DIR
+            cd $TARGET_DIR
+            tar -xvf $archive_file
             chmod +x $TARGET_BIN
         '';
         
@@ -74,13 +75,13 @@ let
 
 
     # Traditional Linux ELF
-    v2_20_0_machine_code_x86_64_linux_gnu_libc = pkgs.stdenv.mkDerivation {
+    v2_2_0_machine_code_x86_64_linux_gnu_libc = pkgs.stdenv.mkDerivation {
         name = "zm_opencode-machine_code.x86_64.linux.gnu_libc";
         version = "2.0.26";
         
-        bin_file = pkgs.fetchurl {
-            url = "https://github.com/zombiemaker/nix-zm_opencode/releases/download/v0.1.0/opencode-v2.0.26-x86_64-linux-gnu_libc";
-            sha256 = "sha256-2RI7m82wox96uf6YErWKncF2itbZfnsnbf8RgYEyGMk=";
+        archive_file = pkgs.fetchurl {
+            url = "https://github.com/anomalyco/opencode/releases/download/v2.2.0/opencode-linux-x64.tar.gz";
+            sha256 = "sha256-bVl5cKjMRI8bmp9kVTJYSzOd06uVg7tfBj8T2D5Udo8=";
         };
 
         nativeBuildInputs = [
@@ -94,39 +95,41 @@ let
         ];
 
         installPhase = ''
+            TARGET_DIR="$out/bin"
             TARGET_BIN="$out/bin/opencode"
 
-            mkdir -p $out/bin
-            cp $bin_file $TARGET_BIN
+            mkdir -p $TARGET_DIR
+            cd $TARGET_DIR
+            tar -xvf $archive_file
             chmod +x $TARGET_BIN
         '';
     };
 
 
     # Shell with NixOS Linux ELF
-    v2_20_0_shell_x86_64_linux_nixos_gnu_libc_gnu_bash = pkgs.mkShell {
-        name = "zm_opencode-shell-v2_20_0-linux_nixos-gnu_bash";
+    v2_2_0_shell_x86_64_linux_nixos_gnu_libc_gnu_bash = pkgs.mkShell {
+        name = "zm_opencode-shell-v2_2_0-linux_nixos-gnu_bash";
         buildInputs = [
             pkgs.bashInteractive
         ];
 
         packages = [
-            v2_20_0_machine_code_x86_64_linux_nixos_gnu_libc
+            v2_2_0_machine_code_x86_64_linux_nixos_gnu_libc
         ];
 
         shellHook = ''
         '';
     };
 
-    v2_20_0_shell_x86_64_linux_nixos_gnu_libc_powershell = pkgs.mkShell {
-        name = "zm_pixi-shell-v2_20_0-linux_nixos-powershell";
+    v2_2_0_shell_x86_64_linux_nixos_gnu_libc_powershell = pkgs.mkShell {
+        name = "zm_pixi-shell-v2_2_0-linux_nixos-powershell";
         buildInputs = [
             pkgs.bashInteractive
         ];
 
         packages = [
             pkgs.powershell
-            v2_20_0_machine_code_x86_64_linux_nixos_gnu_libc
+            v2_2_0_machine_code_x86_64_linux_nixos_gnu_libc
         ];
 
         shellHook = ''
@@ -135,29 +138,29 @@ let
     };
 
     # # Shell with traditional Linux ELF
-    v2_20_0_shell_x86_64_linux_gnu_libc_gnu_bash = pkgs.mkShell {
-        name = "zm_opencode-shell-v2_20_0-gnu_bash";
+    v2_2_0_shell_x86_64_linux_gnu_libc_gnu_bash = pkgs.mkShell {
+        name = "zm_opencode-shell-v2_2_0-gnu_bash";
         buildInputs = [
             pkgs.bashInteractive
         ];
 
         packages = [
-            v2_20_0_machine_code_x86_64_linux_gnu_libc
+            v2_2_0_machine_code_x86_64_linux_gnu_libc
         ];
 
         shellHook = ''
         '';
     };
 
-    v2_20_0_shell_x86_64_linux_gnu_libc_powershell = pkgs.mkShell {
-        name = "zm_pixi-shell-v2_20_0-powershell";
+    v2_2_0_shell_x86_64_linux_gnu_libc_powershell = pkgs.mkShell {
+        name = "zm_pixi-shell-v2_2_0-powershell";
         buildInputs = [
             pkgs.bashInteractive
         ];
 
         packages = [
             pkgs.powershell
-            v2_20_0_machine_code_x86_64_linux_gnu_libc
+            v2_2_0_machine_code_x86_64_linux_gnu_libc
         ];
 
         shellHook = ''
@@ -170,11 +173,11 @@ let
         machine_code = {
             x86_64 = {
                 linux_nixos = {
-                    gnu_libc = v2_20_0_machine_code_x86_64_linux_nixos_gnu_libc;
+                    gnu_libc = v2_2_0_machine_code_x86_64_linux_nixos_gnu_libc;
                 };
 
                 linux = {
-                    gnu_libc = v2_20_0_machine_code_x86_64_linux_gnu_libc;
+                    gnu_libc = v2_2_0_machine_code_x86_64_linux_gnu_libc;
                 };
             };
         };
@@ -183,15 +186,15 @@ let
             x86_64 = {
                 linux_nixos = {
                     gnu_libc = {
-                        gnu_bash = v2_20_0_shell_x86_64_linux_nixos_gnu_libc_gnu_bash;
-                        powershell = v2_20_0_shell_x86_64_linux_nixos_gnu_libc_powershell;
+                        gnu_bash = v2_2_0_shell_x86_64_linux_nixos_gnu_libc_gnu_bash;
+                        powershell = v2_2_0_shell_x86_64_linux_nixos_gnu_libc_powershell;
                     };
                 };
 
                 linux = {
                     gnu_libc = {
-                        gnu_bash = v2_20_0_shell_x86_64_linux_gnu_libc_gnu_bash;
-                        powershell = v2_20_0_shell_x86_64_linux_gnu_libc_powershell;
+                        gnu_bash = v2_2_0_shell_x86_64_linux_gnu_libc_gnu_bash;
+                        powershell = v2_2_0_shell_x86_64_linux_gnu_libc_powershell;
                     };
                 };
             };
